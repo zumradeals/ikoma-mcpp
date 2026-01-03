@@ -41,12 +41,12 @@ export async function startHTTPServer(): Promise<void> {
   });
   
   // Health check
-  app.get('/health', (req: Request, res: Response) => {
+  app.get('/health', (_req: Request, res: Response) => {
     res.json({ status: 'healthy', version: '2.0.0' });
   });
   
   // List capabilities
-  app.get('/capabilities', (req: AuthRequest, res: Response) => {
+  app.get('/capabilities', (_req: AuthRequest, res: Response) => {
     res.json({
       capabilities: CAPABILITIES.map(cap => ({
         name: cap.name,

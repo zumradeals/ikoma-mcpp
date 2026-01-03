@@ -1,8 +1,8 @@
-import { CapabilityDefinition, ExecutionContext, AppStatus, PlatformInfo, DeploymentResult, DatabaseInfo, RunbookData, VerificationResult } from './types.js';
+import { CapabilityDefinition, AppStatus, PlatformInfo, DeploymentResult, DatabaseInfo, RunbookData, VerificationResult } from './types.js';
 import { config } from './config.js';
-import { sanitizeAppName, validatePath } from './security.js';
-import { validateArgs, AppNameSchema, EnvVarSchema, ComposeFileSchema, MigrationFileSchema, BackupNameSchema } from './validate.js';
-import { readFile, writeFile, mkdir, access, readdir } from 'fs/promises';
+import { sanitizeAppName } from './security.js';
+import { validateArgs, AppNameSchema, EnvVarSchema, MigrationFileSchema, BackupNameSchema } from './validate.js';
+import { writeFile, mkdir, access, readdir } from 'fs/promises';
 import { join } from 'path';
 import { z } from 'zod';
 import * as docker from './docker.js';
@@ -686,7 +686,7 @@ export function getAllCapabilityNames(): string[] {
   return CAPABILITIES.map(c => c.name);
 }
 
-export function getCapabilitiesForRole(role: string): CapabilityDefinition[] {
+export async function getCapabilitiesForRole(role: string): Promise<CapabilityDefinition[]> {
   const { getRoleLevel } = await import('./roles.js');
   const userLevel = getRoleLevel(role as any);
   
