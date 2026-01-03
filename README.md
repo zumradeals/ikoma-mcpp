@@ -1,103 +1,103 @@
 # 🏗️ IKOMA MCP v2.0
 
-**Sovereign Model Context Protocol Server for AI-Driven VPS Deployment**
+**Serveur Model Context Protocol Souverain pour le Déploiement VPS Piloté par IA**
 
-IKOMA MCP is a secure, audited MCP server that enables AI assistants to deploy and manage applications on a VPS without exposing shell access.
+IKOMA MCP est un serveur MCP sécurisé et audité qui permet aux assistants IA de déployer et gérer des applications sur un VPS sans exposer l'accès shell.
 
-## 🎯 Key Features
+## 🎯 Fonctionnalités Clés
 
-- **Native MCP Compliance**: Fully conformant to the Model Context Protocol specification
-- **Hybrid Transport**: stdio (MCP native) + HTTP REST (optional)
-- **Zero Trust Architecture**: No shell access, whitelisted capabilities only
-- **Role-Based Access Control**: Observer, Operator, Builder, Admin
-- **Comprehensive Audit Trail**: Every action logged with secret redaction
-- **Path Confinement**: All operations restricted to `/srv/apps/<app>/`
-- **Sovereign PostgreSQL**: No external dependencies
-- **Docker Integration**: Managed container orchestration via Docker Compose
+- **Conformité MCP Native** : Entièrement conforme à la spécification Model Context Protocol
+- **Transport Hybride** : stdio (MCP natif) + HTTP REST (optionnel)
+- **Architecture Zero Trust** : Aucun accès shell, capacités en liste blanche uniquement
+- **Contrôle d'Accès Basé sur les Rôles** : Observateur, Opérateur, Constructeur, Administrateur
+- **Piste d'Audit Complète** : Chaque action journalisée avec rédaction des secrets
+- **Confinement des Chemins** : Toutes les opérations restreintes à `/srv/apps/<app>/`
+- **PostgreSQL Souverain** : Aucune dépendance externe
+- **Intégration Docker** : Orchestration de conteneurs gérée via Docker Compose
 
 ## 🏛️ Architecture
 
 ```
 ┌─────────────────┐
-│   AI Client     │
+│  Client IA      │
 │  (MCP stdio)    │
 └────────┬────────┘
          │
     ┌────▼────┐
     │  IKOMA  │──────┐
     │   MCP   │      │
-    │ Server  │◄─────┤  HTTP API (optional)
+    │ Serveur │◄─────┤  API HTTP (optionnel)
     └────┬────┘      │
          │           │
     ┌────▼────────┐  │
-    │ Core Logic  │◄─┘
-    │ (shared)    │
+    │ Logique     │◄─┘
+    │  Centrale   │
     └─────┬───────┘
           │
     ┌─────▼──────┬──────────┐
-    │   Docker   │  PostgreSQL │
+    │   Docker   │ PostgreSQL │
     └────────────┴────────────┘
 ```
 
-## 🔐 Security Model
+## 🔐 Modèle de Sécurité
 
-### Roles Hierarchy
+### Hiérarchie des Rôles
 
-| Role | Level | Capabilities |
-|------|-------|-------------|
-| **observer** | 1 | Read-only access (list, status, health) |
-| **operator** | 2 | + Deploy, restart, backup |
-| **builder** | 3 | + Init apps, DB operations, migrations |
-| **admin** | 4 | + Remove apps, destructive operations |
+| Rôle | Niveau | Capacités |
+|------|--------|-----------|
+| **observateur** | 1 | Accès lecture seule (liste, statut, santé) |
+| **opérateur** | 2 | + Déploiement, redémarrage, sauvegarde |
+| **constructeur** | 3 | + Initialisation d'apps, opérations DB, migrations |
+| **administrateur** | 4 | + Suppression d'apps, opérations destructives |
 
-### Security Features
+### Fonctionnalités de Sécurité
 
-- ✅ API key authentication (SHA256 hashed)
-- ✅ Automatic secret redaction in logs
-- ✅ Path traversal prevention
-- ✅ Docker socket sandboxing
-- ✅ PostgreSQL user isolation
-- ✅ No arbitrary command execution
+- ✅ Authentification par clé API (hashée SHA256)
+- ✅ Rédaction automatique des secrets dans les logs
+- ✅ Prévention de traversée de chemins
+- ✅ Isolation du socket Docker
+- ✅ Isolation utilisateur PostgreSQL
+- ✅ Aucune exécution de commande arbitraire
 
 ## 📦 Installation
 
-### Prerequisites
+### Prérequis
 
-- Ubuntu 24.04 LTS (or compatible)
-- Root access
-- Internet connection
+- Ubuntu 24.04 LTS (ou compatible)
+- Accès root
+- Connexion Internet
 
-### Quick Install
+### Installation Rapide
 
 ```bash
-# Clone the repository
+# Cloner le dépôt
 git clone https://github.com/zumradeals/ikoma-mcpp.git
 cd ikoma-mcpp
 
-# Copy files to /opt/ikoma
+# Copier les fichiers vers /opt/ikoma
 sudo mkdir -p /opt/ikoma
 sudo cp -r . /opt/ikoma/
 
-# Run installation script
+# Exécuter le script d'installation
 sudo bash /opt/ikoma/scripts/install.sh
 ```
 
-The script will:
-1. Install Docker, Docker Compose, Node.js
-2. Create necessary directories
-3. Generate API key and configuration
-4. Build and start IKOMA MCP
-5. Display your API key (save it securely!)
+Le script va :
+1. Installer Docker, Docker Compose, Node.js
+2. Créer les répertoires nécessaires
+3. Générer la clé API et la configuration
+4. Construire et démarrer IKOMA MCP
+5. Afficher votre clé API (sauvegardez-la en sécurité !)
 
-### Manual Installation
+### Installation Manuelle
 
-See [INSTALL.md](INSTALL.md) for detailed manual installation steps.
+Voir [INSTALL.md](INSTALL.md) pour les étapes d'installation manuelle détaillées.
 
-## 🚀 Usage
+## 🚀 Utilisation
 
-### MCP Client (stdio)
+### Client MCP (stdio)
 
-Configure your MCP client to use IKOMA:
+Configurez votre client MCP pour utiliser IKOMA :
 
 ```json
 {
@@ -123,40 +123,40 @@ Configure your MCP client to use IKOMA:
 }
 ```
 
-Then use capabilities:
+Ensuite, utilisez les capacités :
 
 ```javascript
-// List available tools
+// Lister les outils disponibles
 const tools = await client.listTools();
 
-// Execute capability
+// Exécuter une capacité
 const result = await client.callTool({
   name: "platform.info",
   arguments: {}
 });
 ```
 
-### HTTP API
+### API HTTP
 
 ```bash
-# Get API key
+# Obtenir la clé API
 API_KEY=$(cat /opt/ikoma/api-key.txt)
 
-# Platform info
+# Informations de la plateforme
 curl -X POST http://localhost:3000/execute/platform.info \
   -H "X-Api-Key: $API_KEY" \
   -H "X-Role: observer" \
   -H "Content-Type: application/json" \
   -d '{}'
 
-# Initialize app
+# Initialiser une application
 curl -X POST http://localhost:3000/execute/apps.init \
   -H "X-Api-Key: $API_KEY" \
   -H "X-Role: builder" \
   -H "Content-Type: application/json" \
   -d '{"appName":"myapp"}'
 
-# Deploy app
+# Déployer une application
 curl -X POST http://localhost:3000/execute/deploy.up \
   -H "X-Api-Key: $API_KEY" \
   -H "X-Role: operator" \
@@ -164,12 +164,11 @@ curl -X POST http://localhost:3000/execute/deploy.up \
   -d '{"appName":"myapp"}'
 ```
 
-## 🛠️ Complete Tool Registry (19 Tools)
-
+## 🛠️ Registre Complet des Outils (19 Outils)
 **⚠️ LISTE CANONIQUE FIGÉE - SORTIE EXACTE DE CAPABILITIES.map(c => c.name)**
 
 ```javascript
-// Source: src/core/capabilities.ts - CAPABILITIES array
+// Source : src/core/capabilities.ts - tableau CAPABILITIES
 [
   "platform.info",           // 1
   "platform.check",          // 2
@@ -193,82 +192,82 @@ curl -X POST http://localhost:3000/execute/deploy.up \
 ]
 ```
 
-### Platform (2 tools)
+### Plateforme (2 outils)
 
-| # | Tool | Role | Description |
-|---|------|------|-------------|
-| 1 | `platform.info` | observer | Get platform information and available capabilities |
-| 2 | `platform.check` | observer | Check platform health (Docker, PostgreSQL, filesystem) |
+| # | Outil | Rôle | Description |
+|---|-------|------|-------------|
+| 1 | `platform.info` | observateur | Obtenir les informations de la plateforme et les capacités disponibles |
+| 2 | `platform.check` | observateur | Vérifier la santé de la plateforme (Docker, PostgreSQL, système de fichiers) |
 
-### Applications (7 tools)
+### Applications (7 outils)
 
-| # | Tool | Role | Description |
-|---|------|------|-------------|
-| 3 | `apps.list` | observer | List all deployed applications |
-| 4 | `apps.status` | observer | Get status of a specific application |
-| 5 | `apps.health` | observer | Check health of a specific application |
-| 6 | `apps.init` | builder | Initialize a new application directory structure |
-| 7 | `apps.remove` | admin | Remove an application completely (containers, database, files) |
-| 8 | `apps.env.example` | observer | Generate example environment variables for an application |
-| 9 | `apps.validate` | observer | Validate application configuration and structure |
+| # | Outil | Rôle | Description |
+|---|-------|------|-------------|
+| 3 | `apps.list` | observateur | Lister toutes les applications déployées |
+| 4 | `apps.status` | observateur | Obtenir le statut d'une application spécifique |
+| 5 | `apps.health` | observateur | Vérifier la santé d'une application spécifique |
+| 6 | `apps.init` | constructeur | Initialiser une nouvelle structure de répertoire d'application |
+| 7 | `apps.remove` | administrateur | Supprimer complètement une application (conteneurs, base de données, fichiers) |
+| 8 | `apps.env.example` | observateur | Générer un exemple de variables d'environnement pour une application |
+| 9 | `apps.validate` | observateur | Valider la configuration et la structure d'une application |
 
-### Deployment (3 tools)
+### Déploiement (3 outils)
 
-| # | Tool | Role | Description |
-|---|------|------|-------------|
-| 10 | `deploy.up` | operator | Start application containers |
-| 11 | `deploy.down` | operator | Stop application containers |
-| 12 | `deploy.restart` | operator | Restart application containers |
+| # | Outil | Rôle | Description |
+|---|-------|------|-------------|
+| 10 | `deploy.up` | opérateur | Démarrer les conteneurs d'application |
+| 11 | `deploy.down` | opérateur | Arrêter les conteneurs d'application |
+| 12 | `deploy.restart` | opérateur | Redémarrer les conteneurs d'application |
 
-### Database (5 tools)
+### Base de Données (5 outils)
 
-| # | Tool | Role | Description |
-|---|------|------|-------------|
-| 13 | `db.create` | builder | Create a new PostgreSQL database for an application |
-| 14 | `db.migrate` | builder | Execute SQL migration on application database |
-| 15 | `db.seed` | builder | Insert seed data into application database |
-| 16 | `db.backup` | operator | Create a backup of application database |
-| 17 | `db.status` | observer | Get database status and information |
+| # | Outil | Rôle | Description |
+|---|-------|------|-------------|
+| 13 | `db.create` | constructeur | Créer une nouvelle base de données PostgreSQL pour une application |
+| 14 | `db.migrate` | constructeur | Exécuter une migration SQL sur la base de données d'application |
+| 15 | `db.seed` | constructeur | Insérer des données de départ dans la base de données d'application |
+| 16 | `db.backup` | opérateur | Créer une sauvegarde de la base de données d'application |
+| 17 | `db.status` | observateur | Obtenir le statut et les informations de la base de données |
 
-### Artifacts (2 tools)
+### Artefacts (2 outils)
 
-| # | Tool | Role | Description |
-|---|------|------|-------------|
-| 18 | `artifact.generate_runbook` | observer | Generate deployment runbook for an application |
-| 19 | `artifact.verify_release` | observer | Verify application release status and readiness |
+| # | Outil | Rôle | Description |
+|---|-------|------|-------------|
+| 18 | `artifact.generate_runbook` | observateur | Générer un runbook de déploiement pour une application |
+| 19 | `artifact.verify_release` | observateur | Vérifier le statut et la préparation d'une release d'application |
 
 ---
 
-**TOTAL: 19 tools** (2 + 7 + 3 + 5 + 2 = 19) ✅
+**TOTAL : 19 outils** (2 + 7 + 3 + 5 + 2 = 19) ✅
 
-## 🧪 Testing
+## 🧪 Tests
 
-Run the smoke test suite:
+Exécuter la suite de tests de fumée :
 
 ```bash
 sudo bash /opt/ikoma/scripts/smoke-test.sh
 ```
 
-This validates:
-- Platform health
-- Authentication
-- App lifecycle (init, status, validate, remove)
-- Database operations
-- Artifact generation
+Cela valide :
+- Santé de la plateforme
+- Authentification
+- Cycle de vie des applications (init, statut, validation, suppression)
+- Opérations de base de données
+- Génération d'artefacts
 
-## 📊 Monitoring
+## 📊 Surveillance
 
-### View Logs
+### Consulter les Logs
 
 ```bash
-# Application logs
+# Logs de l'application
 docker compose -f /opt/ikoma/docker-compose.yml logs -f
 
-# Audit trail
+# Piste d'audit
 tail -f /var/log/ikoma/audit.jsonl | jq
 ```
 
-### Audit Log Format
+### Format du Log d'Audit
 
 ```json
 {
@@ -284,28 +283,28 @@ tail -f /var/log/ikoma/audit.jsonl | jq
 
 ## 🔧 Configuration
 
-Edit `/opt/ikoma/.env`:
+Éditer `/opt/ikoma/.env` :
 
 ```bash
-# Server mode
+# Mode serveur
 SERVER_MODE=hybrid          # mcp | http | hybrid
 
-# Transport toggles
+# Bascules de transport
 MCP_ENABLED=true
 HTTP_ENABLED=true
 HTTP_PORT=3000
 
 # PostgreSQL
-POSTGRES_PASSWORD=your_secure_password
+POSTGRES_PASSWORD=votre_mot_de_passe_securise
 
-# API key (SHA256 hash)
-API_KEY_HASH=your_hash_here
+# Clé API (hash SHA256)
+API_KEY_HASH=votre_hash_ici
 
-# Default role for MCP stdio
+# Rôle par défaut pour MCP stdio
 IKOMA_ROLE=operator
 ```
 
-Apply changes:
+Appliquer les changements :
 
 ```bash
 cd /opt/ikoma
@@ -314,31 +313,31 @@ sudo docker compose restart
 
 ## 📚 Documentation
 
-- [README-runbook.md](README-runbook.md) - Deployment runbook template
-- [DEMO-SESSION.md](DEMO-SESSION.md) - Interactive demo walkthrough
-- [ARCHITECTURE.md](ARCHITECTURE.md) - Technical architecture details
+- [README-runbook.md](README-runbook.md) - Modèle de runbook de déploiement
+- [DEMO-SESSION.md](DEMO-SESSION.md) - Démonstration interactive pas à pas
+- [ARCHITECTURE.md](ARCHITECTURE.md) - Détails de l'architecture technique
 
-## 🤝 Contributing
+## 🤝 Contribution
 
-Contributions welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) first.
+Les contributions sont les bienvenues ! Veuillez d'abord lire [CONTRIBUTING.md](CONTRIBUTING.md).
 
-## 📄 License
+## 📄 Licence
 
-MIT License - see [LICENSE](LICENSE) file.
+Licence MIT - voir le fichier [LICENSE](LICENSE).
 
 ## 🆘 Support
 
-- GitHub Issues: https://github.com/zumradeals/ikoma-mcpp/issues
-- Documentation: See project documentation files (README-runbook.md, DEMO-SESSION.md)
+- Issues GitHub : https://github.com/zumradeals/ikoma-mcpp/issues
+- Documentation : Voir les fichiers de documentation du projet (README-runbook.md, DEMO-SESSION.md)
 
-## 🙏 Acknowledgments
+## 🙏 Remerciements
 
-Built with:
-- [Model Context Protocol](https://modelcontextprotocol.io) by Anthropic
+Construit avec :
+- [Model Context Protocol](https://modelcontextprotocol.io) par Anthropic
 - [PostgreSQL](https://postgresql.org)
 - [Docker](https://docker.com)
 - [Node.js](https://nodejs.org)
 
 ---
 
-**Made with ❤️ for the AI deployment community**
+**Fait avec ❤️ pour la communauté de déploiement IA**
