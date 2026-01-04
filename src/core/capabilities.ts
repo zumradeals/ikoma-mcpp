@@ -7,6 +7,7 @@ import { join } from 'path';
 import { z } from 'zod';
 import * as docker from './docker.js';
 import * as db from './database.js';
+import * as v1 from './v1_tools.js';
 
 // Platform Capabilities
 
@@ -675,6 +676,75 @@ export const CAPABILITIES: CapabilityDefinition[] = [
       required: ['appName'],
     },
     handler: artifactVerifyRelease,
+  },
+  
+  // V1 Tools
+  {
+    name: 'repo.clone',
+    description: 'Clone/checkout a repository into the app source directory',
+    requiredRole: 'builder',
+    schema: {
+      type: 'object',
+      properties: {
+        release_id: { type: 'string' },
+        app_slug: { type: 'string' },
+        git_url: { type: 'string' },
+        ref: { type: 'string' },
+      },
+      required: ['release_id', 'app_slug', 'git_url'],
+    },
+    handler: v1.repoClone,
+  },
+  {
+    name: 'supabase.ensure',
+    description: 'Ensure Supabase self-host stack for this app is up',
+    requiredRole: 'builder',
+    schema: {
+      type: 'object',
+      properties: {
+        release_id: { type: 'string' },
+        app_slug: { type: 'string' },
+      },
+      required: ['release_id', 'app_slug'],
+    },
+    handler: v1.supabaseEnsure,
+  },
+  {
+    name: 'supabase.apply',
+    description: 'Apply migrations and deploy edge functions',
+    requiredRole: 'builder',
+    schema: {
+      type: 'object',
+      properties: {
+        release_id: { type: 'string' },
+        app_slug: { type: 'string' },
+        project_path: { type: 'string' },
+        functions: { type: 'array', items: { type: 'string' } },
+      },
+      required: ['release_id', 'app_slug', 'project_path'],
+    },
+    handler: v1.supabaseApply,
+  },
+  {
+    name: 'release.deploy',
+    description: 'Deploy application and configure reverse proxy',
+    requiredRole: 'builder',
+    schema: {
+      type: 'object',
+      properties: {
+        release_id: { type: 'string' },
+        app_slug: { type: 'string' },
+        project_path: { type: 'string' },
+        type: { type: 'string' },
+        service: { type: 'string' },
+        port: { type: 'number' },
+        domain: { type: 'string' },
+        healthcheck: { type: 'string' },
+        env_required: { type: 'array', items: { type: 'string' } },
+      },
+      required: ['release_id', 'app_slug', 'project_path', 'type', 'service', 'port'],
+    },
+    handler: v1.releaseDeploy,
   },
 ];
 

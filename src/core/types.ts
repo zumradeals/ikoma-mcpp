@@ -71,6 +71,22 @@ export interface PlatformInfo {
   };
 }
 
+export interface V1ResponseEnvelope {
+  ok: boolean;
+  release_id: string;
+  action: string;
+  started_at: string;
+  ended_at: string;
+  summary: string;
+  warnings: string[];
+  artifacts: Record<string, any>;
+  error?: {
+    code: string;
+    message: string;
+    hint?: string;
+  };
+}
+
 export interface DeploymentResult {
   success: boolean;
   message: string;

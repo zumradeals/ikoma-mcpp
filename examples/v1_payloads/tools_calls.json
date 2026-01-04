@@ -1,0 +1,29 @@
+{
+  "repo.clone": {
+    "release_id": "rel_20240104_001",
+    "app_slug": "my-awesome-app",
+    "git_url": "https://github.com/user/repo",
+    "ref": "main"
+  },
+  "supabase.ensure": {
+    "release_id": "rel_20240104_001",
+    "app_slug": "my-awesome-app"
+  },
+  "supabase.apply": {
+    "release_id": "rel_20240104_001",
+    "app_slug": "my-awesome-app",
+    "project_path": "/srv/apps/my-awesome-app/src",
+    "functions": ["hello-world", "process-payment"]
+  },
+  "release.deploy": {
+    "release_id": "rel_20240104_001",
+    "app_slug": "my-awesome-app",
+    "project_path": "/srv/apps/my-awesome-app/src",
+    "type": "docker-compose",
+    "service": "web",
+    "port": 3000,
+    "domain": "app.example.com",
+    "healthcheck": "/api/health",
+    "env_required": ["DATABASE_URL", "STRIPE_KEY"]
+  }
+}
